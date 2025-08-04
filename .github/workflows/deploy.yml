@@ -42,7 +42,7 @@ on:
         default: stage
 jobs:
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: blacksmith-4vcpu-ubuntu-2404
     env:
       BUNDLE_WITHOUT: default #install gems required primarely for deployment in order to speed up workflow
       PRIVATE_CONFIG_REPO: ${{ format('git@github.com:{0}.git', secrets.CONFIG_REPO) }}
