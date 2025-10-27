@@ -279,7 +279,7 @@ fr:
     input_hint: Entrez ou collez un texte à annoter...
     insert_sample_text: Insérer un texte d'exemple
     lemmatize: Lématiser
-    match_longest_only: Mot le le plus long uniquement
+    match_longest_only: Mot le plus long uniquement
     negation: Négation
     ontology: Ontologie
     options: Options
