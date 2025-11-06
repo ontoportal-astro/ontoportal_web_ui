@@ -6,37 +6,31 @@ class HomeController < ApplicationController
   include FairScoreHelper, FederationHelper,MetricsHelper
 
   def index
-    @analytics = helpers.ontologies_analytics
+    @analytics = Rails.cache.fetch("ontologies_analytics-#{Time.now.year}-#{Time.now.month}", expires_in: 2.hours) do
+      helpers.ontologies_analytics
+    end
 
     @slices = LinkedData::Client::Models::Slice.all
 
-    @metrics = portal_metrics(@analytics)
-
-
-    @upload_benefits = [
-      t('home.benefit1'),
-      t('home.benefit2'),
-      t('home.benefit3'),
-      t('home.benefit4'),
-      t('home.benefit5')
-    ]
-
     @anal_ont_names = []
     @anal_ont_numbers = []
-    if @analytics.empty?
-      all_metrics = LinkedData::Client::Models::Metrics.all
-      all_metrics.sort_by{|x| -(x.classes + x.individuals)}[0..4].each do |x|
-        @anal_ont_names << x.id.split('/')[-4]
-        @anal_ont_numbers << (x.classes + x.individuals) || 0
-      end
-    else
-      @analytics.sort_by{|ont, count| -count}[0..4].each do |ont, count|
+    unless @analytics.empty?
+      @analytics.first(3).each do |ont, count|
         @anal_ont_names << ont
         @anal_ont_numbers << count
       end
     end
+  end
 
-
+  # Add a new action for the metrics frame
+  def metrics
+    @analytics = Rails.cache.fetch("ontologies_analytics-#{Time.now.year}-#{Time.now.month}", expires_in: 2.hours) do
+      helpers.ontologies_analytics
+    end
+    @metrics = portal_metrics(@analytics)
+    respond_to do |format|
+      format.html { render partial: 'metrics', layout: false }
+    end
   end
 
   def set_cookies
@@ -47,7 +41,7 @@ class HomeController < ApplicationController
   def portal_config
     @config = $PORTALS_INSTANCES.select { |x| x[:name].downcase.eql?((params[:portal] || helpers.portal_name).downcase) }.first
     if @config && @config[:api]
-      @portal_config = LinkedData::Client::Models::Ontology.top_level_links(@config[:api]).to_h
+      @portal_config = get_portal_config
       @color = @portal_config[:color].present? ? @portal_config[:color] : @config[:color]
       @name = @portal_config[:title].present? ? @portal_config[:title] : @config[:name]
     else
@@ -184,5 +178,15 @@ class HomeController < ApplicationController
 
     others, agriculture = @groups.partition { |g| g.acronym != 'CGIAR' }
     @groups = others + agriculture
+  end
+
+  def get_portal_config
+    portal_config = LinkedData::Client::Models::Ontology.top_level_links(@config[:api])
+    if portal_config.is_a?(LinkedData::Client::Models::SemanticArtefactCatalog)
+      portal_config = portal_config.to_hash
+    else
+      portal_config = portal_config.to_h
+    end
+    portal_config
   end
 end
