@@ -170,44 +170,59 @@ $CITE_RECOMMENDER = 'https://doi.org/10.1186/s13326-017-0128-y'
 $RESOURCE_TERM = ENV['RESOURCE_TERM'] || 'ontology'
 
 $HOME_PAGE_LOGOS = [
-    {
-      img_src: 'logos/supports/numev.webp',
-      url: 'http://www.lirmm.fr/numev',
-      target: '_blank'
-    },
-    {
-      img_src: 'logos/supports/anr.webp',
-      url: 'https://anr.fr/en',
-      target: '_blank'
-    },
-    {
-      img_src: 'logos/supports/eu.webp',
+      {
+      img_src: 'logos/supports/eu.png',
       url: 'https://commission.europa.eu/research-and-innovation_en',
-      target: '_blank'
-    },
-    {
-      img_src: 'logos/collaboration/d2kab.webp',
-      url: 'http://d2kab.mystrikingly.com',
-      target: '_blank'
-    },
-    {
-      img_src: 'logos/collaboration/um_logo.webp',
-      url: 'https://www.umontpellier.fr/',
       target: '_blank',
     },
     {
-      img_src: 'logos/collaboration/inrae.webp',
-      url: 'https://www.inrae.fr/enm',
-      target: '_blank'
+      img_src: 'logos/collaboration/obsparis.png',
+      url: 'https://observatoiredeparis.psl.eu',
+      target: '_blank',
     },
     {
-      img_src: 'logos/collaboration/stanford.webp',
+      img_src: 'logos/collaboration/inrae.png',
+      url: 'https://www.inrae.fr',
+      target: '_blank',
+    },
+    {
+      img_src: 'logos/collaboration/stanford.png',
       url: 'https://www.stanford.edu',
-      target: '_blank'
+      target: '_blank',
     },
     {
-      img_src: 'logos/collaboration/ontoportal.webp',
+      img_src: 'logos/collaboration/ontoportal.png',
       url: 'https://ontoportal.org/',
+      target: '_blank',
+    },
+    {
+      img_src: 'logos/collaboration/escape.png',
+      url: 'https://projectescape.eu',
+      target: '_blank',
+    },
+    {
+      img_src: 'logos/collaboration/ivoa.png',
+      url: 'https://ivoa.net',
+      target: '_blank',
+    },
+    {
+      img_src: 'logos/collaboration/ihdea.png',
+      url: 'https://ihdea.net',
+      target: '_blank',
+    },
+    {
+      img_src: 'logos/collaboration/cnrs_insu.png',
+      url: 'https://www.insu.cnrs.fr/',
+      target: '_blank',
+    },
+    {
+      img_src: 'logos/supports/oscar.webp',
+      url: 'https://oscars-project.eu/',
+      target: '_blank',
+    },
+    {
+      img_src: 'logos/supports/cnes.webp',
+      url: 'https://cnes.fr/',
       target: '_blank',
     }
 ]
