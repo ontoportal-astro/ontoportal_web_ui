@@ -517,7 +517,7 @@ fr:
     see_possible_credits: Voir les crédits possibles
     see_the_used_properties: voir les propriétés utilisées
     view_fair_scores_definitions: 'Vous voyez le score d''évaluation de l''adéquation
-      avec les principes FAIR pour cette ontologie dans AgroPortal. Les scores FAIR
+      avec les principes FAIR pour cette ontologie dans OntoPortal-Astro. Les scores FAIR
       sont calculés avec la méthodologie O''FAIRe. Plus de détails ici : https://github.com/agroportal/fairness'
   federation:
     check_status: Vérification de la disponibilité de %{portal}
@@ -585,7 +585,7 @@ fr:
       welcome: Bienvenue sur %{site},
     individuals: Individus
     info_tooltip_text: 'Vous voyez les scores moyens pour toutes les ontologies publiques
-      dans AgroPortal. Les scores FAIR sont calculés avec la méthodologie O''FAIRe.
+      dans OntoPortal-Astro. Les scores FAIR sont calculés avec la méthodologie O''FAIRe.
       Plus de détails ici : https://github.com/agroportal/fairness'
     mappings: Alignements
     max: Max
@@ -616,9 +616,9 @@ fr:
     see_details: Voir les détails
     slices_description: Les "slices" permettent aux utilisateurs d'interagir (à la
       fois via l'API ou l'interface utilisateur) uniquement avec un sous-ensemble
-      d'ontologies dans AgroPortal. Si vous parcourez une slice, toutes les fonctionnalités
+      d'ontologies dans OntoPortal-Astro. Si vous parcourez une slice, toutes les fonctionnalités
       du portail seront limitées au sous-ensemble choisi; cela permet aux utilisateurs
-      de se concentrer sur leurs cas d'utilisation spécifiques. Sur AgroPortal, les
+      de se concentrer sur leurs cas d'utilisation spécifiques. Sur OntoPortal-Astro, les
       slices et les groupes sont synchronisés, de sorte que chaque groupe a une slice
       correspondante affichant uniquement les ontologies de ce groupe.
     suggest_slice: Proposer un nouveau groupe/slice
@@ -1038,7 +1038,7 @@ fr:
         'rewrite' est activé en exécutant la commande `sudo a2enmod rewrite`
     htaccess_redirection_description: Nous proposons une solution transparente pour
       rendre les URI de votre ontologie résolubles et le contenu négociable en autorisant
-      la redirection d'URL de vos URI d'ontologie vers nos URI d'Agroportal. Pour
+      la redirection d'URL de vos URI d'ontologie vers nos URI d'OntoPortal-Astro. Pour
       faciliter ce processus, nous vous avons fourni un ensemble de règles de réécriture
       .htaccess. En suivant les instructions simples ci-dessous, vous serez en mesure
       de mettre en œuvre ces règles rapidement et efficacement, garantissant ainsi
