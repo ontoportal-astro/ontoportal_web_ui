@@ -720,10 +720,10 @@ en:
       documentation: Documentation
       issues_and_requests: Issues and Requests
       legal_notices: Legal Notices
-      legal_notices_anchor: "#h-legal-notice"
+      legal_notices_anchor: "#legal-notice"
       ontoportal: OntoPortal
       privacy_policy: Privacy Policy
-      privacy_policy_anchor: "#h-privacy-policy"
+      privacy_policy_anchor: "#privacy-policy"
       products: Products
       projects: D2KAB
       release_notes: Release Notes
