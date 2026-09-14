@@ -7,10 +7,13 @@ module SubmissionFilter
                        'contact', 'released', 'naturalLanguage', 'hasOntologyLanguage',
                        'hasFormalityLevel', 'isOfType', 'deprecated', 'status', 'metrics']
 
+  ONTOLOGY_FORMATS = %w[OBO OWL SKOS UMLS XLSX].freeze
+
   def init_filters(params)
     @show_views = params[:show_views]&.eql?('true')
     @show_private_only = params[:private_only]&.eql?('true')
     @user_ontologies_only = params[:user_ontologies_only]&.eql?('true')
+    @show_public_only = params[:public_only]&.eql?('true')
     @show_retired = params[:show_retired]&.eql?('true')
     @selected_format = params[:format]
     @sort_by = params[:sort_by].blank? ? 'visits' : params[:sort_by]
@@ -30,8 +33,8 @@ module SubmissionFilter
 
     @ontologies, @errors = @ontologies.partition { |x| !x.errors }
 
-    # get fair scores of all ontologies
-    @fair_scores = fairness_service_enabled? ? get_fair_score('all') : nil
+    # get fair scores of all ontologies, including from the selected federated portals
+    @fair_scores = fairness_service_enabled? ? get_fair_score_with_federation('all') : nil
 
     @total_ontologies = @ontologies.size
 
@@ -81,8 +84,14 @@ module SubmissionFilter
   end
 
 
-  def filter_submissions(ontologies, query:, status:, show_views:, private_only:, user_ontologies_only:, languages:, page_size:, formality_level:, is_of_type:, groups:, categories:, formats:)
-    submissions = LinkedData::Client::Models::OntologySubmission.all(include: BROWSE_ATTRIBUTES.join(','), also_include_views: true, display_links: false, display_context: false)
+  def filter_submissions(ontologies, query:, status:, show_views:, private_only:, public_only: false, user_ontologies_only: false, languages:, page_size:, formality_level:, is_of_type:, groups:, categories:, formats:, user: false)
+    if user
+      # Getting only the submission of the logged in user
+      submissions = LinkedData::Client::Models::OntologySubmission.all(acronym: ontologies.map { |o| o[:acronym] }.join('|'), include: BROWSE_ATTRIBUTES.join(','), include_status: "ANY", also_include_views: true, display_links: false, display_context: false)    
+    else
+      status_to_include = current_user_admin? ? "ANY" : "READY"
+      submissions = LinkedData::Client::Models::OntologySubmission.all(include: BROWSE_ATTRIBUTES.join(','), include_status: status_to_include, also_include_views: true, display_links: false, display_context: false)
+    end
 
     submissions = submissions.map { |x| x[:ontology] ? [x[:ontology][:id], x] : nil }.compact.to_h
 
@@ -91,6 +100,7 @@ module SubmissionFilter
     submissions.map do |s|
       out = true
       out &&= s[:ontology].viewingRestriction.eql?('private') if private_only
+      out &&= s[:ontology].viewingRestriction.eql?('public') if public_only
       out &&= s[:ontology].administeredBy.include?(current_user.id) if user_ontologies_only
       out &&= (groups.blank? || (s[:ontology].group.map { |x| helpers.link_last_part(x) } & groups.split(',')).any?)
       out &&= (categories.blank? || (s[:ontology].hasDomain.map { |x| helpers.link_last_part(x) } & categories.split(',')).any?)
@@ -175,6 +185,8 @@ module SubmissionFilter
 
     filters_boolean_map = {
       show_views: { api_key: :also_include_views, default: 'true' },
+      public_only: { api_key: :viewingRestriction, default: 'public' },
+      user_ontologies_only: { api_key: :administeredBy, default: 'true' },
       private_only: { api_key: :viewingRestriction, default: 'private' },
       show_retired: { api_key: :status, default: 'retired' }
     }
@@ -188,10 +200,9 @@ module SubmissionFilter
     end
 
     if params[:show_retired].blank?
-      @filters[:show_retired] = ''
       request_params[:status] = 'alpha,beta,production'
     else
-      request_params[:status] = 'alpha,beta,production,retired'
+      request_params[:status] = 'retired'
       @filters[:show_retired] = 'true'
     end
 
@@ -310,8 +321,9 @@ module SubmissionFilter
       { 'id' => id, 'name' => helpers.link_last_part(id), 'acronym' => name, 'value' => helpers.link_last_part(id) }
     end
 
-    @formats = [[t("submissions.filter.all_formats"), ''], 'OBO', 'OWL', 'SKOS', 'UMLS']
+    @formats = [[t("submissions.filter.all_formats"), '']] + ONTOLOGY_FORMATS
     @sorts_options = [
+      [t("submissions.filter.sort"), ''],
       [t("submissions.filter.sort_by_name"), 'ontology_name'],
       [t("submissions.filter.sort_by_classes"), 'metrics_classes'],
       [t("submissions.filter.sort_by_instances_concepts"), 'metrics_individuals'],
